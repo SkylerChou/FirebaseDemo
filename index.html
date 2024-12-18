@@ -20,7 +20,11 @@
       set,
       onValue,
       child,
-      get
+      get,
+      push,
+      update,
+      remove,
+      runTransaction 
     } from "https://www.gstatic.com/firebasejs/11.1.0/firebase-database.js";
 
     // Your web app's Firebase configuration
@@ -46,10 +50,14 @@
     // ref() 尋找資料庫路徑 、 set() 新增資料，參考: https://firebase.google.com/docs/database/web/read-and-write?hl=zh-tw#write_data
     // set(ref(database, "/hi"), "hi");
 
+    function createPost(id, starCount) {
+      set(ref(database, "posts/" + id), { starCount });
+    }
+
     function createUser(id, name, gender) {
       set(ref(database, "users/" + id), { name, gender });
     }
-
+    createPost(123,0)
     createUser(123, "asd", "male");
     createUser(456, "zxc", "female");
 
@@ -82,7 +90,71 @@
     });
  
     // 更新或刪除資料，參考: https://firebase.google.com/docs/database/web/read-and-write?hl=zh-tw#updating_or_deleting_data
-    // 更新特定欄位
+    // 更新特定欄位 - update() 可以指定索引鍵的路徑，藉此更新較低層級的子項值
+    function OverWriteUser(id,name,gender,hobby) {
+      // A User entry
+      const userData={
+        name,
+        gender
+      };
+      const userBehavior={
+        hobby
+      };
+
+      // Get a key for a new User.
+      // const newUserKey=push(child(ref(database),'users')).key;
+      // console.log(newUserKey);
+
+      // Write the new user's data simultaneously in the user's list.
+      const updates={}
+      updates[`users/${id}`] = userData;
+      updates[`usersBehavior/${id}`] = userBehavior;
+
+      return update(ref(database), updates);
+    }
+
+    OverWriteUser(123,'kim','female',"健身")
+
+    // 新增完成回呼
+    set(ref(database, 'users/' + 789), {
+      name: 'Rock',
+      gender: 'male',
+    })
+    .then(() => {
+      // Data saved successfully!
+      console.log('Data saved successfully');
+    })
+    .catch((error) => {
+      // The write failed...
+      console.error(error);
+    });
+
+    // 刪除資料
+    // remove() - 刪除資料最簡單的方法
+    remove(ref(database, 'users/' + 789));
+    // set()[單項] 
+    set(ref(database, "users/" + 456), null) .then(() => {
+      // Data saved successfully!
+      console.log('Data saved successfully');
+    })
+    .catch((error) => {
+      // The write failed...
+      console.error(error);
+    });
+    // update()[多項] 指定為 null
+    const updates={}
+    updates[`users/${123}`] = null;
+    updates[`usersBehavior/${123}`] = null;
+
+    update(ref(database), updates).then(() => {
+      // Data saved successfully!
+      console.log('Data saved successfully');
+    })
+    .catch((error) => {
+      // The write failed...
+      console.error(error);
+    });
+
 
   </script>
 
