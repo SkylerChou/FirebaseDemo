@@ -1,2 +1,3 @@
 # FirebaseDemo
-Side Project 
+Side Project
+練習串 Firebase 接資料庫 
