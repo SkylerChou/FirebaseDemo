@@ -24,7 +24,7 @@
       push,
       update,
       remove,
-      runTransaction 
+      runTransaction
     } from "https://www.gstatic.com/firebasejs/11.1.0/firebase-database.js";
 
     // Your web app's Firebase configuration
@@ -57,7 +57,7 @@
     function createUser(id, name, gender) {
       set(ref(database, "users/" + id), { name, gender });
     }
-    createPost(123,0)
+    createPost(123, 0)
     createUser(123, "asd", "male");
     createUser(456, "zxc", "female");
 
@@ -83,21 +83,21 @@
 
     // 使用觀察器讀取資料一次 - 資料只需載入一次，且不會經常變更或需要主動聆聽，參考: https://firebase.google.com/docs/database/web/read-and-write?hl=zh-tw#read_data_once_with_an_observer
     onValue(ref(database, 'users/123'), (snapshot) => {
-    const username = (snapshot.val() && snapshot.val().name) || 'Anonymous';
-    console.log(username);
+      const username = (snapshot.val() && snapshot.val().name) || 'Anonymous';
+      console.log(username);
     }, {
       onlyOnce: true
     });
- 
+
     // 更新或刪除資料，參考: https://firebase.google.com/docs/database/web/read-and-write?hl=zh-tw#updating_or_deleting_data
     // 更新特定欄位 - update() 可以指定索引鍵的路徑，藉此更新較低層級的子項值
-    function OverWriteUser(id,name,gender,hobby) {
+    function OverWriteUser(id, name, gender, hobby) {
       // A User entry
-      const userData={
+      const userData = {
         name,
         gender
       };
-      const userBehavior={
+      const userBehavior = {
         hobby
       };
 
@@ -106,43 +106,43 @@
       // console.log(newUserKey);
 
       // Write the new user's data simultaneously in the user's list.
-      const updates={}
+      const updates = {}
       updates[`users/${id}`] = userData;
       updates[`usersBehavior/${id}`] = userBehavior;
 
       return update(ref(database), updates);
     }
 
-    OverWriteUser(123,'kim','female',"健身")
+    OverWriteUser(123, 'kim', 'female', "健身")
 
     // 新增完成回呼
     set(ref(database, 'users/' + 789), {
       name: 'Rock',
       gender: 'male',
     })
-    .then(() => {
-      // Data saved successfully!
-      console.log('Data saved successfully');
-    })
-    .catch((error) => {
-      // The write failed...
-      console.error(error);
-    });
+      .then(() => {
+        // Data saved successfully!
+        console.log('Data saved successfully');
+      })
+      .catch((error) => {
+        // The write failed...
+        console.error(error);
+      });
 
     // 刪除資料
     // remove() - 刪除資料最簡單的方法
     remove(ref(database, 'users/' + 789));
     // set()[單項] 
-    set(ref(database, "users/" + 456), null) .then(() => {
+    set(ref(database, "users/" + 456), null).then(() => {
       // Data saved successfully!
       console.log('Data saved successfully');
     })
-    .catch((error) => {
-      // The write failed...
-      console.error(error);
-    });
+      .catch((error) => {
+        // The write failed...
+        console.error(error);
+      });
     // update()[多項] 指定為 null
-    const updates={}
+    const updates = {}
     updates[`users/${123}`] = null;
     updates[`usersBehavior/${123}`] = null;
 
@@ -150,10 +150,10 @@
       // Data saved successfully!
       console.log('Data saved successfully');
     })
-    .catch((error) => {
-      // The write failed...
-      console.error(error);
-    });
+      .catch((error) => {
+        // The write failed...
+        console.error(error);
+      });
 
 
   </script>
